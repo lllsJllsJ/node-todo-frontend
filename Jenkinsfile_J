@@ -1,0 +1,18 @@
+node('centos1'){
+    nodejsHome = tool 'node11.6'
+    
+    stage('Preparation') {
+        checkout([$class: 'GitSCM', branches: [[name: "*/master"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd21bb2a5-dd5a-481f-a6c0-60d193ffb592', url: 'git@gitlab-poc:test/node-todo-frontend.git']]])
+        sh "echo $nodejsHome"
+        sh "pwd"
+    }
+        
+    stage('Install dependencies') {
+        sh "${nodejsHome}/bin/npm install"
+    }
+     
+    stage('Test') {
+        sh "${nodejsHome}/bin/npm test"
+    }      
+  
+}
